@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MML 03 &mdash; Analytic Geometry</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
+    <style>
+        :root { --bg-primary:#0a0a0a; --bg-card:#0d1117; --bg-code:#161b22; --text-primary:#e6edf3; --text-secondary:#8b949e; --accent:#a78bfa; --accent-dim:#a78bfa44; --accent-glow:#a78bfa33; --accent-2:#f472b6; --accent-3:#fbbf24; --accent-4:#34d399; --border:#21262d; --font-display:'Space Grotesk',sans-serif; --font-mono:'JetBrains Mono','Fira Code',monospace; --font-body:'Inter',sans-serif; --max-width:900px; }
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+        html{scroll-behavior:smooth}
+        body{background:var(--bg-primary);color:var(--text-primary);font-family:var(--font-body);font-size:17px;line-height:1.7;overflow-x:hidden}
+        .hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:2rem 1.5rem;text-align:center;position:relative}
+        .hero::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:700px;height:600px;background:radial-gradient(circle,var(--accent-glow) 0%,transparent 70%);pointer-events:none;z-index:0}
+        .hero>*{position:relative;z-index:1}
+        .series-label{font-family:var(--font-mono);font-size:.85rem;color:var(--accent);letter-spacing:.15em;text-transform:uppercase;margin-bottom:1rem}
+        .hero h1{font-family:var(--font-display);font-size:clamp(2rem,5vw,3.2rem);font-weight:700;color:var(--text-primary);line-height:1.2;margin-bottom:1rem}
+        .hero h1 .accent{color:var(--accent)}
+        .hero .subtitle{font-size:1.1rem;color:var(--text-secondary);max-width:640px;margin-bottom:2rem}
+        .tags{display:flex;flex-wrap:wrap;gap:.5rem;justify-content:center;margin-bottom:2.5rem}
+        .tag{font-family:var(--font-mono);font-size:.75rem;padding:.25rem .75rem;border-radius:999px;border:1px solid var(--accent);color:var(--accent);background:var(--accent-dim);white-space:nowrap}
+        .pipeline{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:.25rem;margin-bottom:1rem;max-width:var(--max-width)}
+        .pipeline-step{font-family:var(--font-mono);font-size:.7rem;padding:.3rem .7rem;background:var(--bg-card);border:1px solid var(--border);border-radius:4px;color:var(--text-secondary);white-space:nowrap}
+        .pipeline-arrow{color:var(--accent);font-size:.9rem;font-weight:700}
+        .slide{min-height:100vh;max-width:var(--max-width);margin:0 auto;padding:4rem 1.5rem;position:relative;display:flex;flex-direction:column;justify-content:center}
+        .slide-number{font-family:var(--font-display);font-size:5rem;font-weight:700;color:var(--accent-dim);position:absolute;top:2rem;right:1.5rem;line-height:1;user-select:none}
+        .slide h2{font-family:var(--font-display);font-size:1.9rem;font-weight:700;color:var(--accent);margin-bottom:1.5rem;line-height:1.25}
+        .slide h3{font-family:var(--font-display);font-size:1.3rem;font-weight:600;color:var(--text-primary);margin-top:1.5rem;margin-bottom:.75rem}
+        .slide p{margin-bottom:1rem;color:var(--text-secondary)}
+        .slide p strong{color:var(--text-primary)}
+        .slide ul,.slide ol{margin-bottom:1rem;padding-left:1.5rem;color:var(--text-secondary)}
+        .slide li{margin-bottom:.4rem}
+        .slide li strong{color:var(--text-primary)}
+        .slide code{background:var(--bg-code);padding:.1rem .35rem;border-radius:3px;font-family:var(--font-mono);font-size:.85em;color:var(--accent)}
+        .diagram-grid{display:grid;gap:.75rem;margin:1.5rem 0;padding:1.5rem;background:var(--bg-card);border:1px solid var(--border);border-radius:8px}
+        .diagram-grid.cols-2{grid-template-columns:1fr 1fr}
+        .diagram-grid.cols-3{grid-template-columns:1fr 1fr 1fr}
+        .diagram-panel{padding:1rem;background:var(--bg-code);border:1px solid var(--border);border-radius:6px}
+        .diagram-panel.accent-border{border-left:3px solid var(--accent)}
+        .diagram-panel.r{border-left:3px solid var(--accent-2)}
+        .diagram-panel.y{border-left:3px solid var(--accent-3)}
+        .diagram-panel.g{border-left:3px solid var(--accent-4)}
+        .diagram-panel h4{font-family:var(--font-display);font-size:1rem;color:var(--accent);margin-bottom:.5rem}
+        .diagram-panel.r h4{color:var(--accent-2)}
+        .diagram-panel.y h4{color:var(--accent-3)}
+        .diagram-panel.g h4{color:var(--accent-4)}
+        .diagram-panel p,.diagram-panel ul{font-size:.9rem}
+        .callout{background:var(--bg-card);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;padding:1rem 1.25rem;margin:1.25rem 0}
+        .callout p{margin-bottom:0}
+        .callout .callout-label{font-family:var(--font-mono);font-size:.75rem;color:var(--accent);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.3rem}
+        .canvas-wrap{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1rem;margin:1.25rem 0;overflow-x:auto}
+        .canvas-wrap canvas{display:block;margin:0 auto;max-width:100%}
+        .control-panel{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1.25rem 0}
+        .control-row{display:flex;flex-wrap:wrap;align-items:center;gap:.75rem;margin-bottom:.75rem}
+        .control-row label{font-family:var(--font-mono);font-size:.8rem;color:var(--text-secondary);min-width:130px}
+        .control-row input[type="range"]{flex:1;min-width:150px;accent-color:var(--accent)}
+        .control-row .val{font-family:var(--font-mono);font-size:.85rem;color:var(--accent);min-width:80px;text-align:right}
+        .btn{font-family:var(--font-mono);font-size:.8rem;padding:.4rem .9rem;background:var(--accent-dim);color:var(--accent);border:1px solid var(--accent);border-radius:4px;cursor:pointer}
+        .btn:hover{background:rgba(167,139,250,.25)}
+        .btn.secondary{background:var(--bg-code);color:var(--text-secondary);border-color:var(--border)}
+        .metric-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:.5rem;margin-top:.75rem}
+        .metric{background:var(--bg-code);border:1px solid var(--border);border-radius:6px;padding:.6rem .8rem;text-align:center}
+        .metric .metric-label{font-family:var(--font-mono);font-size:.7rem;color:var(--text-secondary);text-transform:uppercase;letter-spacing:.08em}
+        .metric .metric-value{font-family:var(--font-display);font-size:1.25rem;color:var(--accent);font-weight:600;margin-top:.2rem}
+        .contents-list{list-style:none;padding-left:0;counter-reset:contents}
+        .contents-list li{counter-increment:contents;padding:.6rem 0;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:1rem}
+        .contents-list li:last-child{border-bottom:none}
+        .contents-list li::before{content:counter(contents,decimal-leading-zero);font-family:var(--font-mono);font-size:.85rem;color:var(--accent);min-width:2rem}
+        .contents-list a{color:var(--text-primary);text-decoration:none}
+        .contents-list a:hover{color:var(--accent)}
+        .footer{text-align:center;padding:3rem 1.5rem;color:var(--text-secondary);font-size:.85rem;border-top:1px solid var(--border);max-width:var(--max-width);margin:0 auto}
+        .footer a{color:var(--accent);text-decoration:none}
+        .katex{color:var(--text-primary)}
+        .katex-display{margin:1rem 0;overflow-x:auto;overflow-y:hidden}
+        table{width:100%;border-collapse:collapse;font-size:.9rem;margin:1rem 0}
+        th{background:var(--bg-code);color:var(--accent);font-weight:600;text-align:left;padding:.6rem .85rem;border-bottom:1px solid var(--border);font-family:var(--font-display)}
+        td{padding:.5rem .85rem;border-bottom:1px solid var(--border);color:var(--text-secondary);vertical-align:top}
+        tr:last-child td{border-bottom:none}
+        tr:nth-child(even) td{background:rgba(13,17,23,.5)}
+        @media (max-width:640px){.slide{padding:3rem 1rem;min-height:auto}.slide-number{font-size:3rem;top:1.5rem;right:1rem}.slide h2{font-size:1.5rem}.diagram-grid.cols-2,.diagram-grid.cols-3{grid-template-columns:1fr}.hero h1{font-size:1.8rem}}
+    </style>
+</head>
+<body>
+
+<header class="hero">
+    <div class="series-label">Mathematics for Machine Learning &mdash; Deck 03</div>
+    <h1>Analytic <span class="accent">Geometry</span></h1>
+    <p class="subtitle">Length, angle and perpendicular &mdash; the geometry that turns every "find the closest" question in machine learning into a single drop of a perpendicular.</p>
+
+    <div class="tags">
+        <span class="tag">norms</span><span class="tag">inner product</span>
+        <span class="tag">angle</span><span class="tag">orthonormal</span>
+        <span class="tag">projection</span><span class="tag">rotation</span>
+    </div>
+
+    <div class="pipeline">
+        <span class="pipeline-step">norm</span>
+        <span class="pipeline-arrow">&rarr;</span>
+        <span class="pipeline-step">inner product</span>
+        <span class="pipeline-arrow">&rarr;</span>
+        <span class="pipeline-step">angle</span>
+        <span class="pipeline-arrow">&rarr;</span>
+        <span class="pipeline-step">orthogonality</span>
+        <span class="pipeline-arrow">&rarr;</span>
+        <span class="pipeline-step">projection</span>
+    </div>
+</header>
+
+<section class="slide" id="slide-00">
+    <div class="slide-number">00</div>
+    <h2>Topics We'll Cover</h2>
+    <ul class="contents-list">
+        <li><a href="#slide-01">Norms and the unit ball</a></li>
+        <li><a href="#slide-02">Inner products &mdash; abstract definition</a></li>
+        <li><a href="#slide-03">Lengths, distances, angles, Cauchy&ndash;Schwarz</a></li>
+        <li><a href="#slide-04">Orthonormal bases &amp; Gram&ndash;Schmidt</a></li>
+        <li><a href="#slide-05">Orthogonal complement</a></li>
+        <li><a href="#slide-06">Interactive: orthogonal projection</a></li>
+        <li><a href="#slide-07">Projection onto a subspace</a></li>
+        <li><a href="#slide-08">Rotations</a></li>
+        <li><a href="#slide-09">Inner products on function spaces</a></li>
+        <li><a href="#slide-10">Where this lands in Part II</a></li>
+        <li><a href="#slide-11">Cheat sheet</a></li>
+    </ul>
+</section>
+
+<section class="slide" id="slide-01">
+    <div class="slide-number">01</div>
+    <h2>Norms and the Unit Ball</h2>
+    <p>A <strong>norm</strong> on a real vector space $V$ is a function $\|\cdot\| : V \to \mathbb{R}_{\ge 0}$ satisfying</p>
+    <ol>
+        <li><strong>Positive definiteness</strong>: $\|\mathbf{v}\|=0 \iff \mathbf{v}=\mathbf{0}$;</li>
+        <li><strong>Absolute homogeneity</strong>: $\|\alpha\mathbf{v}\| = |\alpha|\,\|\mathbf{v}\|$;</li>
+        <li><strong>Triangle inequality</strong>: $\|\mathbf{u}+\mathbf{v}\| \le \|\mathbf{u}\| + \|\mathbf{v}\|$.</li>
+    </ol>
+
+    <div class="diagram-grid cols-3">
+        <div class="diagram-panel accent-border">
+            <h4>$\ell^1$ &mdash; "Manhattan"</h4>
+            <p>$\|\mathbf{v}\|_1 = \sum_i |v_i|$.</p>
+            <p>Unit ball: diamond. Encourages <em>sparsity</em> (lasso).</p>
+        </div>
+        <div class="diagram-panel y">
+            <h4>$\ell^2$ &mdash; "Euclidean"</h4>
+            <p>$\|\mathbf{v}\|_2 = \sqrt{\sum_i v_i^2}$.</p>
+            <p>Unit ball: circle. Smooth, rotationally invariant, what an inner product induces.</p>
+        </div>
+        <div class="diagram-panel g">
+            <h4>$\ell^\infty$ &mdash; "Chebyshev"</h4>
+            <p>$\|\mathbf{v}\|_\infty = \max_i |v_i|$.</p>
+            <p>Unit ball: square. Useful for adversarial perturbations and robust ML.</p>
+        </div>
+    </div>
+
+    <p>For finite dimensions all norms are equivalent &mdash; they differ by at most a constant factor. They induce the same notion of <em>convergence</em>, but very different notions of "small": minimising under $\ell^1$ picks a sparse vector; under $\ell^2$ picks a smooth one. ML uses both.</p>
+</section>
+
+<section class="slide" id="slide-02">
+    <div class="slide-number">02</div>
+    <h2>Inner Products &mdash; The Abstract Definition</h2>
+    <p>An <strong>inner product</strong> on $V$ is a map $\langle\cdot,\cdot\rangle : V\times V \to \mathbb{R}$ that is</p>
+    <ol>
+        <li><strong>Bilinear</strong>: $\langle\alpha\mathbf{u}+\beta\mathbf{v},\mathbf{w}\rangle = \alpha\langle\mathbf{u},\mathbf{w}\rangle + \beta\langle\mathbf{v},\mathbf{w}\rangle$ and linear in the second slot too;</li>
+        <li><strong>Symmetric</strong>: $\langle\mathbf{u},\mathbf{v}\rangle = \langle\mathbf{v},\mathbf{u}\rangle$;</li>
+        <li><strong>Positive definite</strong>: $\langle\mathbf{v},\mathbf{v}\rangle \ge 0$, with equality iff $\mathbf{v}=\mathbf{0}$.</li>
+    </ol>
+
+    <h3>Examples</h3>
+    <ul>
+        <li><strong>Dot product on $\mathbb{R}^D$</strong>: $\langle\mathbf{u},\mathbf{v}\rangle = \mathbf{u}^\top\mathbf{v}$.</li>
+        <li><strong>Weighted</strong>: $\langle\mathbf{u},\mathbf{v}\rangle_A = \mathbf{u}^\top A \mathbf{v}$ for any symmetric positive-definite $A$. Mahalanobis distance uses $A=\Sigma^{-1}$.</li>
+        <li><strong>$L^2$ on functions</strong>: $\langle f,g\rangle = \int_a^b f(x)g(x)\,dx$. Fourier and kernel methods live here.</li>
+    </ul>
+
+    <h3>The induced norm</h3>
+    <p>Every inner product produces a norm by $\|\mathbf{v}\| = \sqrt{\langle\mathbf{v},\mathbf{v}\rangle}$. Not every norm comes from an inner product: $\ell^1$ and $\ell^\infty$ don't.</p>
+
+    <div class="callout">
+        <div class="callout-label">Why this matters for ML</div>
+        <p>The inner product is the <em>only</em> object needed for projection, angle, and orthogonality. The kernel trick (deck 12) generalises by letting $\langle\mathbf{u},\mathbf{v}\rangle_k = k(\mathbf{u},\mathbf{v})$ &mdash; an inner product without ever writing down the corresponding vectors.</p>
+    </div>
+</section>
+
+<section class="slide" id="slide-03">
+    <div class="slide-number">03</div>
+    <h2>Lengths, Distances, Angles, Cauchy&ndash;Schwarz</h2>
+
+    <h3>Length</h3>
+    <p>$$\|\mathbf{v}\| = \sqrt{\langle\mathbf{v},\mathbf{v}\rangle}.$$</p>
+
+    <h3>Distance</h3>
+    <p>$$d(\mathbf{u},\mathbf{v}) = \|\mathbf{u}-\mathbf{v}\|.$$</p>
+
+    <h3>Angle</h3>
+    <p>$$\cos\theta = \frac{\langle\mathbf{u},\mathbf{v}\rangle}{\|\mathbf{u}\|\,\|\mathbf{v}\|} \quad \in [-1, 1].$$</p>
+    <p>The fact that this ratio is in $[-1,1]$ is the <strong>Cauchy&ndash;Schwarz inequality</strong>:</p>
+    <p>$$|\langle\mathbf{u},\mathbf{v}\rangle| \le \|\mathbf{u}\|\,\|\mathbf{v}\|.$$</p>
+    <p>Equality holds iff $\mathbf{u}$ and $\mathbf{v}$ are linearly dependent. This single inequality powers most convergence proofs in optimisation and the regret bounds in online learning.</p>
+
+    <h3>Orthogonality</h3>
+    <p>$\mathbf{u}\perp\mathbf{v}$ iff $\langle\mathbf{u},\mathbf{v}\rangle=0$. When $\mathbf{u}\perp\mathbf{v}$, Pythagoras applies: $\|\mathbf{u}+\mathbf{v}\|^2 = \|\mathbf{u}\|^2 + \|\mathbf{v}\|^2$.</p>
+
+    <div class="callout">
+        <div class="callout-label">Cosine similarity in ML</div>
+        <p>The fact above is the basis of "cosine similarity" between embedding vectors: $\cos\theta(\mathbf{u},\mathbf{v}) \in [-1,1]$ measures how aligned the directions are, independent of magnitude. Two embeddings can be a thousand units apart in $\ell^2$ and still have $\cos\theta=1$.</p>
+    </div>
+</section>
+
+<section class="slide" id="slide-04">
+    <div class="slide-number">04</div>
+    <h2>Orthonormal Bases &amp; Gram&ndash;Schmidt</h2>
+    <p>A basis $(\mathbf{b}_1,\dots,\mathbf{b}_n)$ is <strong>orthonormal</strong> if $\langle\mathbf{b}_i,\mathbf{b}_j\rangle = \delta_{ij}$ (1 if $i=j$, 0 otherwise). In coordinates relative to an orthonormal basis, the inner product collapses to a dot product and a vector's coordinates are <em>just</em> its inner products with the basis vectors:</p>
+    <p>$$\mathbf{v} = \sum_{i=1}^n \langle \mathbf{v}, \mathbf{b}_i\rangle\, \mathbf{b}_i.$$</p>
+
+    <h3>Gram&ndash;Schmidt</h3>
+    <p>Given any basis $(\mathbf{v}_1, \dots, \mathbf{v}_n)$, produce an orthonormal one:</p>
+    <p>$$\mathbf{u}_k = \mathbf{v}_k - \sum_{j=1}^{k-1} \langle\mathbf{v}_k, \mathbf{b}_j\rangle\,\mathbf{b}_j, \qquad \mathbf{b}_k = \frac{\mathbf{u}_k}{\|\mathbf{u}_k\|}.$$</p>
+    <p>Each step strips off the component of $\mathbf{v}_k$ that already lies in the span of the previous basis vectors, then normalises. Stack the $\mathbf{b}_k$'s as columns and you get the $Q$ of the $QR$ factorisation (deck 04).</p>
+
+    <div class="callout">
+        <div class="callout-label">Numerical caveat</div>
+        <p>"Classical" Gram&ndash;Schmidt is numerically unstable for nearly-parallel vectors. The <em>modified</em> version subtracts each projection one at a time and accumulates much less round-off error; production libraries use modified GS or Householder reflections.</p>
+    </div>
+</section>
+
+<section class="slide" id="slide-05">
+    <div class="slide-number">05</div>
+    <h2>Orthogonal Complement</h2>
+    <p>For a subspace $U\subseteq V$, the <strong>orthogonal complement</strong> is</p>
+    <p>$$U^\perp = \{\mathbf{w}\in V : \langle\mathbf{w},\mathbf{u}\rangle=0 \text{ for all } \mathbf{u}\in U\}.$$</p>
+    <p>Three facts:</p>
+    <ol>
+        <li>$U^\perp$ is a subspace.</li>
+        <li>$\dim U + \dim U^\perp = \dim V$.</li>
+        <li>$V = U \oplus U^\perp$ &mdash; every $\mathbf{v}\in V$ has a unique decomposition $\mathbf{v} = \mathbf{u} + \mathbf{w}$ with $\mathbf{u}\in U$, $\mathbf{w}\in U^\perp$.</li>
+    </ol>
+
+    <h3>Tying back to deck 02</h3>
+    <p>For any matrix $A$:</p>
+    <p>$$\mathrm{Row}(A)^\perp = \mathrm{Nul}(A), \qquad \mathrm{Col}(A)^\perp = \mathrm{Nul}(A^\top).$$</p>
+    <p>The four fundamental subspaces are therefore <em>two orthogonal pairs</em> sitting inside $\mathbb{R}^n$ and $\mathbb{R}^m$. This is the geometric content of the rank-nullity theorem.</p>
+</section>
+
+<section class="slide" id="slide-06">
+    <div class="slide-number">06</div>
+    <h2>Interactive: Orthogonal Projection</h2>
+    <p>Drag the tip of $\mathbf{v}$ (purple). The <em>projection</em> onto the green line $L = \mathrm{span}(\mathbf{u})$ is computed live, and the residual is drawn as a dashed amber segment. Notice three things:</p>
+    <ul>
+        <li>The residual is always perpendicular to $L$ &mdash; that's <em>why</em> the projection minimises distance.</li>
+        <li>Pythagoras holds: $\|\mathbf{v}\|^2 = \|\pi_L(\mathbf{v})\|^2 + \|\mathbf{v}-\pi_L(\mathbf{v})\|^2$.</li>
+        <li>Projection is idempotent: projecting twice gives the same answer.</li>
+    </ul>
+
+    <div class="canvas-wrap">
+        <canvas id="proj-canvas" width="700" height="450"></canvas>
+        <div style="text-align:center;font-family:var(--font-mono);font-size:.75rem;color:var(--text-secondary);margin-top:.5rem">
+            Drag the purple dot. The green line is $\mathrm{span}(\mathbf{u})$ where $\mathbf{u}$ is the green vector.
+        </div>
+    </div>
+
+    <div class="metric-grid">
+        <div class="metric"><div class="metric-label">|v|</div><div class="metric-value" id="proj-v-norm">—</div></div>
+        <div class="metric"><div class="metric-label">|π_L(v)|</div><div class="metric-value" id="proj-pv-norm">—</div></div>
+        <div class="metric"><div class="metric-label">|v − π_L(v)|</div><div class="metric-value" id="proj-resid">—</div></div>
+        <div class="metric"><div class="metric-label">cos θ</div><div class="metric-value" id="proj-cos">—</div></div>
+    </div>
+
+    <p>The formula on the line:</p>
+    <p>$$\pi_L(\mathbf{v}) = \frac{\langle\mathbf{v},\mathbf{u}\rangle}{\langle\mathbf{u},\mathbf{u}\rangle}\,\mathbf{u}.$$</p>
+</section>
+
+<section class="slide" id="slide-07">
+    <div class="slide-number">07</div>
+    <h2>Projection onto a Subspace</h2>
+    <p>For a $k$-dimensional subspace $U = \mathrm{Col}(B)$ where $B\in\mathbb{R}^{D\times k}$ has linearly independent columns, the orthogonal projection of $\mathbf{v}$ onto $U$ is</p>
+    <p>$$\pi_U(\mathbf{v}) = B(B^\top B)^{-1} B^\top \mathbf{v}.$$</p>
+    <p>If the columns of $B$ are <em>orthonormal</em> the formula simplifies to $BB^\top \mathbf{v}$ &mdash; one matrix-vector multiply.</p>
+
+    <h3>The minimising property</h3>
+    <p>$\pi_U(\mathbf{v})$ is the unique element of $U$ closest to $\mathbf{v}$:</p>
+    <p>$$\pi_U(\mathbf{v}) = \arg\min_{\mathbf{u}\in U}\|\mathbf{v}-\mathbf{u}\|.$$</p>
+    <p>Proof: the residual $\mathbf{v}-\pi_U(\mathbf{v})$ lies in $U^\perp$; Pythagoras gives $\|\mathbf{v}-\mathbf{u}\|^2 = \|\mathbf{v}-\pi_U(\mathbf{v})\|^2 + \|\pi_U(\mathbf{v})-\mathbf{u}\|^2$, minimised at $\mathbf{u}=\pi_U(\mathbf{v})$.</p>
+
+    <div class="callout">
+        <div class="callout-label">Linear regression preview</div>
+        <p>The least-squares solution $\hat{\boldsymbol\theta} = (\Phi^\top\Phi)^{-1}\Phi^\top\mathbf{y}$ in deck 09 has the formula $\Phi\hat{\boldsymbol\theta} = \Phi(\Phi^\top\Phi)^{-1}\Phi^\top\mathbf{y}$ &mdash; exactly the projection of $\mathbf{y}$ onto $\mathrm{Col}(\Phi)$. The "$\Phi^\top$" on the right and the "$(\Phi^\top\Phi)^{-1}$" in the middle exist because $\Phi$ may not have orthonormal columns.</p>
+    </div>
+</section>
+
+<section class="slide" id="slide-08">
+    <div class="slide-number">08</div>
+    <h2>Rotations</h2>
+    <p>A <strong>rotation</strong> is a linear map that preserves both lengths and orientation. In matrix form: $R\in\mathbb{R}^{D\times D}$ is a rotation iff $R^\top R = I$ and $\det R = +1$. The set of all such $R$ forms a group called $SO(D)$.</p>
+
+    <h3>In $\mathbb{R}^2$</h3>
+    <p>$$R(\theta) = \begin{bmatrix}\cos\theta &amp; -\sin\theta\\ \sin\theta &amp; \phantom{-}\cos\theta\end{bmatrix}.$$</p>
+    <p>$R(\theta_1)R(\theta_2)=R(\theta_1+\theta_2)$. A 2D rotation is uniquely determined by one angle.</p>
+
+    <h3>In $\mathbb{R}^3$</h3>
+    <p>Three angles (Euler angles, or roll/pitch/yaw), or equivalently a unit axis and a single angle (Rodrigues), or a unit quaternion.</p>
+
+    <h3>Orthogonal but not a rotation</h3>
+    <p>If $R^\top R = I$ but $\det R = -1$, $R$ is a <em>reflection</em>. Together they form the <em>orthogonal group</em> $O(D)$.</p>
+
+    <div class="callout">
+        <div class="callout-label">RoPE in transformers</div>
+        <p>Rotary Position Embeddings (used by Llama, Gemma, DeepSeek) rotate pairs of dimensions in $\mathbb{R}^d$ by an angle that depends on position. The position-dependent rotation matrix is block-diagonal with $d/2$ blocks each of the form above. The whole thing is a rotation.</p>
+    </div>
+</section>
+
+<section class="slide" id="slide-09">
+    <div class="slide-number">09</div>
+    <h2>Inner Products on Function Spaces</h2>
+    <p>The abstract definition of inner product means we can put one on spaces of <em>functions</em>. The space $L^2([a,b])$ of square-integrable functions on $[a,b]$ comes with</p>
+    <p>$$\langle f, g\rangle = \int_a^b f(x)\, g(x)\, dx.$$</p>
+    <p>This makes "two functions are orthogonal" a sensible statement. Three uses in ML:</p>
+
+    <div class="diagram-grid cols-3">
+        <div class="diagram-panel accent-border">
+            <h4>Fourier</h4>
+            <p>$\{1, \sin nx, \cos nx\}$ is an orthogonal basis of $L^2([0,2\pi])$. Coefficients = inner products.</p>
+        </div>
+        <div class="diagram-panel y">
+            <h4>Polynomial features</h4>
+            <p>Orthogonal polynomials (Legendre, Hermite) give numerically stable feature maps for regression.</p>
+        </div>
+        <div class="diagram-panel g">
+            <h4>Kernel methods</h4>
+            <p>Mercer's theorem: a kernel $k(\mathbf{x},\mathbf{x}')$ is the inner product of feature maps in an RKHS. The SVM in deck 12 only ever uses $k$, never the features themselves.</p>
+        </div>
+    </div>
+
+    <p>The same theorems &mdash; Pythagoras, Cauchy&ndash;Schwarz, projection minimises distance &mdash; hold word-for-word in these function spaces. That's the power of the abstract definition: every theorem proved in this chapter applies everywhere.</p>
+</section>
+
+<section class="slide" id="slide-10">
+    <div class="slide-number">10</div>
+    <h2>Where This Lands in Part II</h2>
+    <table>
+        <thead><tr><th>Concept</th><th>Used by</th><th>Where</th></tr></thead>
+        <tbody>
+            <tr><td>$\ell^2$ norm</td><td>Ridge regression</td><td>Regulariser $\|\boldsymbol\theta\|^2$ shrinks toward zero</td></tr>
+            <tr><td>$\ell^1$ norm</td><td>Sparse models</td><td>Lasso selects features</td></tr>
+            <tr><td>Inner product</td><td>SVM (ch. 12)</td><td>Replaced by kernel $k(\mathbf{x},\mathbf{x}')$</td></tr>
+            <tr><td>Cosine similarity</td><td>Embeddings, retrieval</td><td>Length-invariant similarity</td></tr>
+            <tr><td>Cauchy&ndash;Schwarz</td><td>Convergence proofs</td><td>SGD, perceptron, regret bounds</td></tr>
+            <tr><td>Orthonormal basis</td><td>PCA (ch. 10)</td><td>Principal components are an orthonormal basis</td></tr>
+            <tr><td>Orthogonal projection</td><td>Linear regression (ch. 9)</td><td>$\hat{\mathbf{y}}$ is the projection of $\mathbf{y}$ onto $\mathrm{Col}(\Phi)$</td></tr>
+            <tr><td>Distance to hyperplane</td><td>SVM (ch. 12)</td><td>Margin = $\frac{|\mathbf{w}^\top\mathbf{x}+b|}{\|\mathbf{w}\|}$</td></tr>
+            <tr><td>Rotation</td><td>PCA, decoders</td><td>Whitening / RoPE / orthogonal weight init</td></tr>
+        </tbody>
+    </table>
+</section>
+
+<section class="slide" id="slide-11">
+    <div class="slide-number">11</div>
+    <h2>Cheat Sheet</h2>
+    <table>
+        <thead><tr><th>Quantity</th><th>Formula</th></tr></thead>
+        <tbody>
+            <tr><td>length</td><td>$\|\mathbf{v}\| = \sqrt{\langle\mathbf{v},\mathbf{v}\rangle}$</td></tr>
+            <tr><td>distance</td><td>$d(\mathbf{u},\mathbf{v}) = \|\mathbf{u}-\mathbf{v}\|$</td></tr>
+            <tr><td>angle</td><td>$\cos\theta = \frac{\langle\mathbf{u},\mathbf{v}\rangle}{\|\mathbf{u}\|\,\|\mathbf{v}\|}$</td></tr>
+            <tr><td>Cauchy&ndash;Schwarz</td><td>$|\langle\mathbf{u},\mathbf{v}\rangle| \le \|\mathbf{u}\|\,\|\mathbf{v}\|$</td></tr>
+            <tr><td>projection onto a line</td><td>$\pi_L(\mathbf{v})=\frac{\langle\mathbf{v},\mathbf{u}\rangle}{\langle\mathbf{u},\mathbf{u}\rangle}\mathbf{u}$</td></tr>
+            <tr><td>projection onto $\mathrm{Col}(B)$</td><td>$B(B^\top B)^{-1}B^\top \mathbf{v}$</td></tr>
+            <tr><td>orthonormal projection</td><td>$BB^\top \mathbf{v}$ (when $B^\top B=I$)</td></tr>
+            <tr><td>residual is perpendicular</td><td>$\mathbf{v}-\pi_U(\mathbf{v})\in U^\perp$</td></tr>
+            <tr><td>rotation in $\mathbb{R}^2$</td><td>$\begin{bmatrix}\cos\theta &amp; -\sin\theta\\\sin\theta &amp; \cos\theta\end{bmatrix}$</td></tr>
+            <tr><td>$SO(D)$</td><td>$R^\top R=I,\;\det R=+1$</td></tr>
+        </tbody>
+    </table>
+
+    <div class="callout">
+        <div class="callout-label">Up next</div>
+        <p>Deck 04 takes the same geometry one step further: when does a matrix have a complete orthonormal basis of eigenvectors? The answer (the spectral theorem) and its generalisation to rectangular matrices (the SVD) sit at the heart of PCA and low-rank approximation.</p>
+    </div>
+</section>
+
+<footer class="footer">
+    <p><strong>Book:</strong> Deisenroth, Faisal &amp; Ong, <em>Mathematics for Machine Learning</em> &mdash; Cambridge University Press, 2020, chapter 3.<br>Free PDF: <a href="https://mml-book.github.io/book/mml-book.pdf">mml-book.github.io/book/mml-book.pdf</a></p>
+    <p style="margin-top:.6rem"><a href="https://brendanjameslynskey.github.io/MML_Hub/">&larr; All decks</a> &middot; <a href="https://brendanjameslynskey.github.io/MML_02_Linear_Algebra/">prev (02)</a> &middot; <a href="https://brendanjameslynskey.github.io/MML_04_Matrix_Decompositions/">next (04) &rarr;</a></p>
+</footer>
+
+<script>
+// Interactive: projection of v onto span(u)
+(function() {
+    const cvs = document.getElementById('proj-canvas');
+    if (!cvs) return;
+    const ctx = cvs.getContext('2d');
+    const dpr = window.devicePixelRatio || 1;
+    const W = 700, H = 450;
+    cvs.width = W * dpr; cvs.height = H * dpr;
+    cvs.style.width = W + 'px'; cvs.style.height = H + 'px';
+    ctx.scale(dpr, dpr);
+
+    const colors = {
+        bg: '#0a0a0a', grid: '#161b22', gridStrong: '#21262d',
+        purple: '#a78bfa', pink: '#f472b6',
+        yellow: '#fbbf24', green: '#34d399',
+        text: '#e6edf3', dim: '#8b949e'
+    };
+
+    const origin = {x: W/2, y: H/2};
+    const scale = 40; // pixels per unit
+    // u defines the line direction (green) — fixed for clarity
+    let u = {x: 3, y: 1.5};
+    let v = {x: 1.5, y: 3.2};
+
+    let dragging = null;
+
+    function world(p) { return {x: origin.x + p.x*scale, y: origin.y - p.y*scale}; }
+    function fromScreen(sx, sy) { return {x: (sx-origin.x)/scale, y: -(sy-origin.y)/scale}; }
+
+    function drawArrow(p, color, label) {
+        const w = world(p);
+        ctx.strokeStyle = color; ctx.fillStyle = color;
+        ctx.lineWidth = 2.5;
+        ctx.beginPath(); ctx.moveTo(origin.x, origin.y); ctx.lineTo(w.x, w.y); ctx.stroke();
+        // arrowhead
+        const ang = Math.atan2(w.y-origin.y, w.x-origin.x);
+        const ah = 10;
+        ctx.beginPath();
+        ctx.moveTo(w.x, w.y);
+        ctx.lineTo(w.x - ah*Math.cos(ang-0.4), w.y - ah*Math.sin(ang-0.4));
+        ctx.lineTo(w.x - ah*Math.cos(ang+0.4), w.y - ah*Math.sin(ang+0.4));
+        ctx.closePath(); ctx.fill();
+        if (label) {
+            ctx.font = '600 14px "Space Grotesk", sans-serif';
+            ctx.fillText(label, w.x+8, w.y-6);
+        }
+    }
+
+    function drawGrid() {
+        ctx.fillStyle = colors.bg; ctx.fillRect(0,0,W,H);
+        // minor
+        ctx.strokeStyle = colors.grid; ctx.lineWidth = 1;
+        for (let x = (origin.x % scale); x < W; x += scale) {
+            ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();
+        }
+        for (let y = (origin.y % scale); y < H; y += scale) {
+            ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
+        }
+        // axes
+        ctx.strokeStyle = colors.gridStrong; ctx.lineWidth = 1.2;
+        ctx.beginPath(); ctx.moveTo(0, origin.y); ctx.lineTo(W, origin.y); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(origin.x, 0); ctx.lineTo(origin.x, H); ctx.stroke();
+    }
+
+    function drawLine(dir, color) {
+        const len = Math.hypot(dir.x, dir.y);
+        const ux = dir.x/len, uy = dir.y/len;
+        const t = Math.max(W, H);
+        const p1 = world({x: -ux*t/scale, y: -uy*t/scale});
+        const p2 = world({x:  ux*t/scale, y:  uy*t/scale});
+        ctx.strokeStyle = color; ctx.lineWidth = 1.5;
+        ctx.setLineDash([4, 6]); ctx.beginPath();
+        ctx.moveTo(p1.x, p1.y); ctx.lineTo(p2.x, p2.y); ctx.stroke();
+        ctx.setLineDash([]);
+    }
+
+    function draw() {
+        drawGrid();
+        // span line
+        drawLine(u, colors.green);
+        // projection: pv = ((v·u)/(u·u)) u
+        const dot = v.x*u.x + v.y*u.y;
+        const uu = u.x*u.x + u.y*u.y;
+        const k = dot / uu;
+        const pv = {x: k*u.x, y: k*u.y};
+        // residual segment (dashed)
+        const wv = world(v), wp = world(pv);
+        ctx.strokeStyle = colors.yellow; ctx.lineWidth = 2;
+        ctx.setLineDash([5,5]);
+        ctx.beginPath(); ctx.moveTo(wv.x, wv.y); ctx.lineTo(wp.x, wp.y); ctx.stroke();
+        ctx.setLineDash([]);
+        // little square at the foot, indicating right angle
+        const sq = 10;
+        // direction from pv toward v in screen space
+        const dxv = wv.x - wp.x, dyv = wv.y - wp.y;
+        const lenv = Math.hypot(dxv, dyv) || 1;
+        const ev = {x: dxv/lenv, y: dyv/lenv};
+        // direction along line toward origin
+        const dux = origin.x - wp.x, duy = origin.y - wp.y;
+        const lenu = Math.hypot(dux, duy) || 1;
+        const eu = {x: dux/lenu, y: duy/lenu};
+        ctx.strokeStyle = colors.yellow;
+        ctx.beginPath();
+        ctx.moveTo(wp.x + sq*ev.x, wp.y + sq*ev.y);
+        ctx.lineTo(wp.x + sq*ev.x + sq*eu.x, wp.y + sq*ev.y + sq*eu.y);
+        ctx.lineTo(wp.x + sq*eu.x, wp.y + sq*eu.y);
+        ctx.stroke();
+
+        // u (green) and v (purple)
+        drawArrow(u, colors.green, 'u');
+        drawArrow(v, colors.purple, 'v');
+        // projection point
+        ctx.fillStyle = colors.pink;
+        ctx.beginPath(); ctx.arc(wp.x, wp.y, 6, 0, 2*Math.PI); ctx.fill();
+        ctx.fillStyle = colors.pink;
+        ctx.font = '600 13px "Space Grotesk", sans-serif';
+        ctx.fillText('π_L(v)', wp.x+10, wp.y+18);
+
+        // numerics
+        const vNorm = Math.hypot(v.x, v.y);
+        const pvNorm = Math.hypot(pv.x, pv.y);
+        const resid = Math.hypot(v.x-pv.x, v.y-pv.y);
+        const cosT = (vNorm > 1e-9 && Math.hypot(u.x,u.y) > 1e-9) ? dot/(vNorm*Math.hypot(u.x,u.y)) : 0;
+        document.getElementById('proj-v-norm').textContent = vNorm.toFixed(2);
+        document.getElementById('proj-pv-norm').textContent = pvNorm.toFixed(2);
+        document.getElementById('proj-resid').textContent = resid.toFixed(2);
+        document.getElementById('proj-cos').textContent = cosT.toFixed(3);
+    }
+
+    function near(p, sx, sy, r) {
+        const w = world(p);
+        return ((w.x-sx)*(w.x-sx) + (w.y-sy)*(w.y-sy)) <= r*r;
+    }
+    cvs.addEventListener('pointerdown', e => {
+        const rect = cvs.getBoundingClientRect();
+        const sx = (e.clientX-rect.left)*(W/rect.width), sy = (e.clientY-rect.top)*(H/rect.height);
+        if (near(v, sx, sy, 18)) dragging = 'v';
+        else if (near(u, sx, sy, 18)) dragging = 'u';
+    });
+    cvs.addEventListener('pointermove', e => {
+        const rect = cvs.getBoundingClientRect();
+        const sx = (e.clientX-rect.left)*(W/rect.width), sy = (e.clientY-rect.top)*(H/rect.height);
+        cvs.style.cursor = (near(v,sx,sy,18) || near(u,sx,sy,18)) ? 'grab' : 'default';
+        if (!dragging) return;
+        const p = fromScreen(sx, sy);
+        // clamp to plotting region
+        p.x = Math.max(-7, Math.min(7, p.x));
+        p.y = Math.max(-4.5, Math.min(4.5, p.y));
+        if (dragging === 'v') v = p;
+        if (dragging === 'u') {
+            // keep u from collapsing to zero
+            if (Math.hypot(p.x, p.y) > 0.4) u = p;
+        }
+        draw();
+    });
+    window.addEventListener('pointerup', () => { dragging = null; });
+    draw();
+})();
+</script>
+
+</body>
+</html>
